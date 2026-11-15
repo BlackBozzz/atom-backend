@@ -1,0 +1,17 @@
+[
+  {
+    "code": "READER",
+    "name": "Читатель",
+    "description": "Просматривает все справочники без права изменения",
+    "grants": {
+      "tables": {
+        "*": [
+          "read"
+        ]
+      },
+      "actions": [
+        "queue.read"
+      ]
+    }
+  }
+]
