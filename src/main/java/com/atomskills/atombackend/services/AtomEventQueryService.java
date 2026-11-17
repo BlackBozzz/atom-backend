@@ -1,6 +1,7 @@
 package com.atomskills.atombackend.services;
 
 import com.atomskills.atombackend.dto.EventDto;
+import com.atomskills.atombackend.dto.LastEventDto;
 import com.atomskills.atombackend.entity.QEdifice;
 import com.atomskills.atombackend.entity.QEvent;
 import com.atomskills.atombackend.entity.QEventStatus;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.argent.servicecommon.querydsl.ArgentQuerydsl.paginate;
 import static com.argent.servicecommon.querydsl.ArgentQuerydsl.selectDto;
@@ -59,5 +61,30 @@ public class AtomEventQueryService {
                 "occurredAt", e.occurredAt,
                 "resourceType", e.resourceType
         ));
+    }
+
+    public Optional<LastEventDto> findLatestByEdifice(Integer idEdifice) {
+        QEvent e  = QEvent.event;
+        QEdifice ed = QEdifice.edifice;
+        QEventStatus s = QEventStatus.eventStatus;
+
+        JPAQuery<LastEventDto> query = queryFactory
+                .select(selectDto(LastEventDto.class,
+                        e.idEvent,
+                        e.edifice.idEdifice.as("idEdifice"),
+                        ed.name.as("edificeName"),
+                        e.resourceType,
+                        e.occurredAt,
+                        e.status.idStatus.as("idStatus"),
+                        s.name.as("statusName"),
+                        e.syncedAt))
+                .from(e)
+                .join(e.edifice, ed)
+                .join(e.status, s)
+                .where(e.edifice.idEdifice.eq(idEdifice))
+                .orderBy(e.occurredAt.desc(), e.idEvent.desc())
+                .limit(1);
+
+        return Optional.ofNullable(query.fetchOne());
     }
 }

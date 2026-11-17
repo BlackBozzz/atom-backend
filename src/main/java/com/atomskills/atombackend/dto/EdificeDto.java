@@ -1,5 +1,7 @@
 package com.atomskills.atombackend.dto;
 
+import lombok.Data;
+
 import java.time.Instant;
 
 public record EdificeDto(

@@ -19,7 +19,6 @@ public class EdificeDependencyController {
     }
 
     @GetMapping
-    @PreAuthorize("@argentAccess.table('edifice_dependency', 'read')")
     public Page<EdificeDependencyDto> list(
             @RequestParam(required = false) Integer idSource,
             @RequestParam(required = false) Integer idDependent,

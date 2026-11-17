@@ -9,7 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/legacy/edifices")
+@RequestMapping("/api/edifices")
 public class EdificeController {
 
     private final EdificeQueryService service;
@@ -19,7 +19,6 @@ public class EdificeController {
     }
 
     @GetMapping
-    @PreAuthorize("@argentAccess.table('edifice', 'read')")
     public Page<EdificeDto> list(
             @RequestParam(required = false) String district,
             @RequestParam(required = false) String street,

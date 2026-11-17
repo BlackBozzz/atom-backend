@@ -1,6 +1,6 @@
 package com.atomskills.atombackend.dto;
 
-import com.atomskills.atombackend.entity.Edifice;
+import lombok.Data;
 
 import java.time.Instant;
 

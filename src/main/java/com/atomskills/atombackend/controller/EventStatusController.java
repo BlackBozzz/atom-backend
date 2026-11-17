@@ -9,7 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/legacy/event-statuses")
+@RequestMapping("/api/event-statuses")
 public class EventStatusController {
 
     private final EventStatusQueryService service;
@@ -19,7 +19,6 @@ public class EventStatusController {
     }
 
     @GetMapping
-    @PreAuthorize("@argentAccess.table('event_status', 'read')")
     public Page<EventStatusDto> list(
             @PageableDefault(size = 20, sort = "idStatus") Pageable pageable) {
         return service.page(pageable);
