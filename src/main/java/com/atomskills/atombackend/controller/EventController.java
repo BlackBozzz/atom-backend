@@ -1,6 +1,6 @@
 package com.atomskills.atombackend.controller;
 
-import com.atomskills.atombackend.dto.AtomEventDto;
+import com.atomskills.atombackend.dto.EventDto;
 import com.atomskills.atombackend.services.AtomEventQueryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +22,7 @@ public class EventController {
     }
 
     @GetMapping
-    public Page<AtomEventDto> list(
+    public Page<EventDto> list(
             @RequestParam(required = false) Integer idEdifice,
             @RequestParam(required = false) Short idStatus,
             @RequestParam(required = false)

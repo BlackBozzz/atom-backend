@@ -1,5 +1,7 @@
 package com.atomskills.atombackend.entity;
 
+import com.argent.servicecommon.dictionary.annotation.ArgentDataTable;
+import com.atomskills.atombackend.dto.EventStatusDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -15,6 +17,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @NoArgsConstructor
+@ArgentDataTable(name = "Статусы событий", dtoClass = EventStatusDto.class)
 public class EventStatus {
 
     @Id

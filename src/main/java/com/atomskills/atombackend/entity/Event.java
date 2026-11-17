@@ -1,5 +1,7 @@
 package com.atomskills.atombackend.entity;
 
+import com.argent.servicecommon.dictionary.annotation.ArgentDataTable;
+import com.atomskills.atombackend.dto.EventDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +15,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@ArgentDataTable(name = "События", dtoClass = EventDto.class)
 public class Event {
 
     @Id

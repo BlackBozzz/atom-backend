@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * Плоский DTO: id-шники родителей + их читаемые имена.
  * Никаких @ManyToOne — иначе Jackson полезет в LAZY и упадёт.
  */
-public record AtomEventDto(
+public record EventDto(
         Integer idEvent,
         Integer idEdifice,
         String edificeName,

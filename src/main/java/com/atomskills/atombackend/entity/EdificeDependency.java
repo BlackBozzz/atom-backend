@@ -1,5 +1,7 @@
 package com.atomskills.atombackend.entity;
 
+import com.argent.servicecommon.dictionary.annotation.ArgentDataTable;
+import com.atomskills.atombackend.dto.EdificeDependencyDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +14,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @NoArgsConstructor
+@ArgentDataTable(name = "Зависимые объекты", dtoClass = EdificeDependencyDto.class)
 public class EdificeDependency {
 
     @Id

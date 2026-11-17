@@ -1,6 +1,6 @@
 package com.atomskills.atombackend.services;
 
-import com.atomskills.atombackend.dto.AtomEventDto;
+import com.atomskills.atombackend.dto.EventDto;
 import com.atomskills.atombackend.entity.QEdifice;
 import com.atomskills.atombackend.entity.QEvent;
 import com.atomskills.atombackend.entity.QEventStatus;
@@ -25,17 +25,17 @@ public class AtomEventQueryService {
         this.queryFactory = queryFactory;
     }
 
-    public Page<AtomEventDto> page(Pageable pageable,
-                                   Integer idEdifice,
-                                   Short idStatus,
-                                   LocalDateTime from,
-                                   LocalDateTime to) {
+    public Page<EventDto> page(Pageable pageable,
+                               Integer idEdifice,
+                               Short idStatus,
+                               LocalDateTime from,
+                               LocalDateTime to) {
         QEvent e  = QEvent.event;
         QEdifice ed = QEdifice.edifice;
         QEventStatus s = QEventStatus.eventStatus;
 
-        JPAQuery<AtomEventDto> query = queryFactory
-                .select(selectDto(AtomEventDto.class,
+        JPAQuery<EventDto> query = queryFactory
+                .select(selectDto(EventDto.class,
                         e.idEvent,
                         e.edifice.idEdifice.as("idEdifice"),
                         ed.name.as("edificeName"),
