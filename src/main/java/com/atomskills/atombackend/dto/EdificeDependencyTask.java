@@ -1,8 +1,15 @@
 package com.atomskills.atombackend.dto;
 
-public record EdificeDependencyTask(
-        int idDependence,
-        String resourceType,
-        int idEdificeSource,
-        int idEdificeDependent
-) { }
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class EdificeDependencyTask {
+    private int idDependence;
+    private String resourceType;
+    private int idEdificeSource;
+    private int idEdificeDependent;
+}

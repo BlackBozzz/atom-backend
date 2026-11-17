@@ -16,13 +16,13 @@ public class EdificeTaskHandler {
 
     @ArgentQueueHandler("external-edifice")
     public void handle(EdificeTask t) {
-        Edifice e = repository.findById(t.idEdifice()).orElseGet(Edifice::new);
-        e.setIdEdifice(t.idEdifice());
-        e.setName(t.name());
-        e.setResourceType(t.resourceType());
-        e.setDistrict(t.district());
-        e.setStreet(t.street());
-        e.setHouseNumber(t.houseNumber());
+        Edifice e = repository.findById(t.getIdEdifice()).orElseGet(Edifice::new);
+        e.setIdEdifice(t.getIdEdifice());
+        e.setName(t.getName());
+        e.setResourceType(t.getResourceType());
+        e.setDistrict(t.getDistrict());
+        e.setStreet(t.getStreet());
+        e.setHouseNumber(t.getHouseNumber());
         e.setSyncedAt(Instant.now());
         repository.save(e);
     }

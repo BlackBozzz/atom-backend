@@ -19,16 +19,16 @@ public class EdificeDependencyTaskHandler {
 
     @ArgentQueueHandler("external-edifice-dependency")
     public void handle(EdificeDependencyTask t) {
-        Edifice source = edifices.findById(t.idEdificeSource())
+        Edifice source = edifices.findById(t.getIdEdificeSource())
                 .orElseThrow(() -> new IllegalStateException(
-                        "edifice source " + t.idEdificeSource() + " ещё не синхронизирован"));
-        Edifice dependent = edifices.findById(t.idEdificeDependent())
+                        "edifice source " + t.getIdEdificeSource() + " ещё не синхронизирован"));
+        Edifice dependent = edifices.findById(t.getIdEdificeDependent())
                 .orElseThrow(() -> new IllegalStateException(
-                        "edifice dependent " + t.idEdificeDependent() + " ещё не синхронизирован"));
+                        "edifice dependent " + t.getIdEdificeDependent() + " ещё не синхронизирован"));
 
-        EdificeDependency d = repository.findById(t.idDependence()).orElseGet(EdificeDependency::new);
-        d.setIdDependence(t.idDependence());
-        d.setResourceType(t.resourceType());
+        EdificeDependency d = repository.findById(t.getIdDependence()).orElseGet(EdificeDependency::new);
+        d.setIdDependence(t.getIdDependence());
+        d.setResourceType(t.getResourceType());
         d.setSource(source);
         d.setDependent(dependent);
         d.setSyncedAt(Instant.now());

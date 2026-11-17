@@ -1,15 +1,20 @@
 package com.atomskills.atombackend.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
-public record EdificeDto(
-        Integer idEdifice,
-        String name,
-        String[] resourceType,
-        String district,
-        String street,
-        String houseNumber,
-        Instant syncedAt
-) { }
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class EdificeDto {
+    private Integer idEdifice;
+    private String name;
+    private String[] resourceType;
+    private String district;
+    private String street;
+    private String houseNumber;
+    private Instant syncedAt;
+}

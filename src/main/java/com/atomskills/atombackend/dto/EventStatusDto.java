@@ -1,9 +1,13 @@
 package com.atomskills.atombackend.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-
-public record EventStatusDto(
-        Short idStatus,
-        String name
-) { }
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class EventStatusDto {
+    private Short idStatus;
+    private String name;
+}

@@ -1,13 +1,18 @@
 package com.atomskills.atombackend.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
-public record EdificeDependencyDto(
-        Integer idDependence,
-        String resourceType,
-        EdificeDto source,
-        EdificeDto dependent,
-        Instant syncedAt
-) { }
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class EdificeDependencyDto {
+    private Integer idDependence;
+    private String resourceType;
+    private EdificeDto source;
+    private EdificeDto dependent;
+    private Instant syncedAt;
+}

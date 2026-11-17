@@ -63,19 +63,19 @@ public class ExternalSyncJob {
         // Порядок: родители раньше детей (FK).
         syncTable("edifices", "external-edifice",
                 l -> edificeReader.fetchSince(l, batchSize),
-                EdificeTask::idEdifice);                 // int → long, widening
+                EdificeTask::getIdEdifice);                 // int → long, widening
 
         syncTable("event_statuses", "external-event-status",
                 l -> statusReader.fetchSince(l, batchSize),
-                EventStatusTask::idStatus);              // short → long, widening
+                EventStatusTask::getIdStatus);              // short → long, widening
 
         syncTable("events", "external-event",
                 l -> eventReader.fetchSince(l, batchSize),
-                EventTask::idEvent);                 // int → long
+                EventTask::getIdEvent);                 // int → long
 
         syncTable("edifice_dependencies", "external-edifice-dependency",
                 l -> depReader.fetchSince(l, batchSize),
-                EdificeDependencyTask::idDependence);    // int → long
+                EdificeDependencyTask::getIdDependence);    // int → long
     }
 
     private <T> void syncTable(String source, String handlerKey,

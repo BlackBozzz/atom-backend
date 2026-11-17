@@ -16,9 +16,9 @@ public class EventStatusTaskHandler {
 
     @ArgentQueueHandler("external-event-status")
     public void handle(EventStatusTask t) {
-        EventStatus s = repository.findById(t.idStatus()).orElseGet(EventStatus::new);
-        s.setIdStatus(t.idStatus());
-        s.setName(t.name());
+        EventStatus s = repository.findById(t.getIdStatus()).orElseGet(EventStatus::new);
+        s.setIdStatus(t.getIdStatus());
+        s.setName(t.getName());
         s.setSyncedAt(Instant.now());
         repository.save(s);
     }

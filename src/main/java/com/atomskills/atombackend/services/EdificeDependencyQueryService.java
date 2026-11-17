@@ -32,10 +32,10 @@ public class EdificeDependencyQueryService {
                 .select(selectDto(EdificeDependencyDto.class,
                         d.idDependence,
                         d.resourceType,
-                        d.source.idEdifice.as("idEdificeSource"),
-                        es.name.as("sourceName"),
-                        d.dependent.idEdifice.as("idEdificeDependent"),
-                        ed.name.as("dependentName"),
+                        d.source.idEdifice.as("source$idEdifice"),
+                        es.name.as("source$name"),
+                        d.dependent.idEdifice.as("dependent$idEdifice"),
+                        ed.name.as("dependent$name"),
                         d.syncedAt))
                 .from(d)
                 .join(d.source, es)

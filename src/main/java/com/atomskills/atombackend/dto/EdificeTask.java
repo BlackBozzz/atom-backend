@@ -1,10 +1,17 @@
 package com.atomskills.atombackend.dto;
 
-public record EdificeTask(
-        int idEdifice,
-        String name,
-        String[] resourceType,
-        String district,
-        String street,
-        String houseNumber
-) { }
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class EdificeTask {
+    private int idEdifice;
+    private String name;
+    private String[] resourceType;
+    private String district;
+    private String street;
+    private String houseNumber;
+}

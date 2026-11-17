@@ -22,18 +22,18 @@ public class EventTaskHandler {
 
     @ArgentQueueHandler("external-event")
     public void handle(EventTask t) {
-        Edifice edifice = edifices.findById(t.idEdifice())
+        Edifice edifice = edifices.findById(t.getIdEdifice())
                 .orElseThrow(() -> new IllegalStateException(
-                        "edifice " + t.idEdifice() + " ещё не синхронизирован"));
-        EventStatus status = statuses.findById(t.idStatus())
+                        "edifice " + t.getIdEdifice() + " ещё не синхронизирован"));
+        EventStatus status = statuses.findById(t.getIdStatus())
                 .orElseThrow(() -> new IllegalStateException(
-                        "event_status " + t.idStatus() + " ещё не синхронизирован"));
+                        "event_status " + t.getIdStatus() + " ещё не синхронизирован"));
 
-        Event event = repository.findById(t.idEvent()).orElseGet(Event::new);
-        event.setIdEvent(t.idEvent());
+        Event event = repository.findById(t.getIdEvent()).orElseGet(Event::new);
+        event.setIdEvent(t.getIdEvent());
         event.setEdifice(edifice);
-        event.setResourceType(t.resourceType());
-        event.setOccurredAt(t.occurredAt());
+        event.setResourceType(t.getResourceType());
+        event.setOccurredAt(t.getOccurredAt());
         event.setStatus(status);
         event.setSyncedAt(Instant.now());
         repository.save(event);
