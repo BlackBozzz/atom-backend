@@ -23,7 +23,7 @@ import java.util.function.Function;
 import java.util.function.ToLongFunction;
 
 @Component
-@ConditionalOnProperty(name = "app.legacy-sync.enabled", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(name = "app.external-sync.enabled", havingValue = "true", matchIfMissing = true)
 public class ExternalSyncJob {
 
     private static final Logger log = LoggerFactory.getLogger(ExternalSyncJob.class);
@@ -43,8 +43,8 @@ public class ExternalSyncJob {
                          EventStatusReader statusReader,
                          EventReader eventReader,
                          EdificeDependencyReader depReader,
-                         @Value("${app.legacy-sync.batch-size:500}") int batchSize,
-                         @Value("${app.legacy-sync.poll-interval-ms:60000}") long pollIntervalMs) {
+                         @Value("${app.external-sync.batch-size:500}") int batchSize,
+                         @Value("${app.external-sync.poll-interval-ms:60000}") long pollIntervalMs) {
         this.cursor = cursor;
         this.queue = queue;
         this.edificeReader = edificeReader;
@@ -56,24 +56,24 @@ public class ExternalSyncJob {
     }
 
     @Scheduled(
-            fixedDelayString   = "${app.legacy-sync.poll-interval-ms:60000}",
-            initialDelayString = "${app.legacy-sync.poll-interval-ms:60000}"
+            fixedDelayString   = "${app.external-sync.poll-interval-ms:60000}",
+            initialDelayString = "${app.external-sync.poll-interval-ms:60000}"
     )
     public void poll() {
         // Порядок: родители раньше детей (FK).
-        syncTable("edifices", "legacy-edifice",
+        syncTable("edifices", "external-edifice",
                 l -> edificeReader.fetchSince(l, batchSize),
                 EdificeTask::idEdifice);                 // int → long, widening
 
-        syncTable("event_statuses", "legacy-event-status",
+        syncTable("event_statuses", "external-event-status",
                 l -> statusReader.fetchSince(l, batchSize),
                 EventStatusTask::idStatus);              // short → long, widening
 
-        syncTable("atom_events", "legacy-atom-event",
+        syncTable("events", "external-event",
                 l -> eventReader.fetchSince(l, batchSize),
                 EventTask::idEvent);                 // int → long
 
-        syncTable("edifice_dependencies", "legacy-edifice-dependency",
+        syncTable("edifice_dependencies", "external-edifice-dependency",
                 l -> depReader.fetchSince(l, batchSize),
                 EdificeDependencyTask::idDependence);    // int → long
     }

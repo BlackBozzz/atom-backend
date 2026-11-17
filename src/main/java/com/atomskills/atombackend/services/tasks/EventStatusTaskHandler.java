@@ -4,18 +4,15 @@ import com.argent.servicecommon.queue.service.ArgentQueueHandler;
 import com.atomskills.atombackend.dto.EventStatusTask;
 import com.atomskills.atombackend.entity.EventStatus;
 import com.atomskills.atombackend.repository.EventStatusRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 
 @Component
+@RequiredArgsConstructor
 public class EventStatusTaskHandler {
-
     private final EventStatusRepository repository;
-
-    public EventStatusTaskHandler(EventStatusRepository repository) {
-        this.repository = repository;
-    }
 
     @ArgentQueueHandler("external-event-status")
     public void handle(EventStatusTask t) {

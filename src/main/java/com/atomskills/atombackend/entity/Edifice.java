@@ -2,10 +2,10 @@ package com.atomskills.atombackend.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import org.springframework.data.annotation.Id;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -15,6 +15,7 @@ import java.util.List;
 @Table(name = "edifice")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Edifice {
 
     @Id

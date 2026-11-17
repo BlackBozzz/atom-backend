@@ -6,23 +6,18 @@ import com.atomskills.atombackend.entity.Edifice;
 import com.atomskills.atombackend.entity.EdificeDependency;
 import com.atomskills.atombackend.repository.EdificeDependencyRepository;
 import com.atomskills.atombackend.repository.EdificeRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 
 @Component
+@RequiredArgsConstructor
 public class EdificeDependencyTaskHandler {
-
     private final EdificeDependencyRepository repository;
     private final EdificeRepository edifices;
 
-    public EdificeDependencyTaskHandler(EdificeDependencyRepository repository,
-                                        EdificeRepository edifices) {
-        this.repository = repository;
-        this.edifices = edifices;
-    }
-
-    @ArgentQueueHandler("legacy-edifice-dependency")
+    @ArgentQueueHandler("external-edifice-dependency")
     public void handle(EdificeDependencyTask t) {
         Edifice source = edifices.findById(t.idEdificeSource())
                 .orElseThrow(() -> new IllegalStateException(

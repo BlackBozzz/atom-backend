@@ -20,7 +20,7 @@ public class EventReader {
 
     private final JdbcTemplate legacyJdbc;
 
-    public EventReader(@Qualifier("legacyJdbc") JdbcTemplate legacyJdbc) {
+    public EventReader(@Qualifier("externalJdbcTemplate") JdbcTemplate legacyJdbc) {
         this.legacyJdbc = legacyJdbc;
     }
 

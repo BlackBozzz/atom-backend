@@ -4,16 +4,15 @@ import com.argent.servicecommon.queue.service.ArgentQueueHandler;
 import com.atomskills.atombackend.dto.EdificeTask;
 import com.atomskills.atombackend.entity.Edifice;
 import com.atomskills.atombackend.repository.EdificeRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 
 @Component
+@RequiredArgsConstructor
 public class EdificeTaskHandler {
     private final EdificeRepository repository;
-    public EdificeTaskHandler(EdificeRepository repository) {
-        this.repository = repository;
-    }
 
     @ArgentQueueHandler("external-edifice")
     public void handle(EdificeTask t) {

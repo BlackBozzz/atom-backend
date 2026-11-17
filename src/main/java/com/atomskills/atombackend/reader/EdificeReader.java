@@ -39,7 +39,7 @@ public class EdificeReader {
 
     private final JdbcTemplate legacyJdbc;
 
-    public EdificeReader(@Qualifier("legacyJdbc") JdbcTemplate legacyJdbc) {
+    public EdificeReader(@Qualifier("externalJdbcTemplate") JdbcTemplate legacyJdbc) {
         this.legacyJdbc = legacyJdbc;
     }
 

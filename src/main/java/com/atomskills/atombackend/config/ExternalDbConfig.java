@@ -14,15 +14,14 @@ import javax.sql.DataSource;
 @Configuration
 public class ExternalDbConfig {
     @Bean(name = "externalDataSource")
-    @ConfigurationProperties(prefix = "app.legacy-db")
-    public DataSource externalDataSource() {
-        return DataSourceBuilder.create()
-                .type(HikariDataSource.class)
-                .build();
+    @ConfigurationProperties(prefix = "app.external-db")
+    public HikariDataSource externalDataSource() {
+        return new HikariDataSource();
     }
 
-    @Bean(name = "legacyJdbc")
-    public JdbcTemplate legacyJdbc(@Qualifier("externalDataSource") DataSource ds) {
+    @Bean(name = "externalJdbcTemplate")
+    public JdbcTemplate externalJdbc(
+            @Qualifier("externalDataSource") DataSource ds) {
         return new JdbcTemplate(ds);
     }
 }

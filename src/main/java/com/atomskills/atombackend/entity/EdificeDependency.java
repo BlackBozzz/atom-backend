@@ -2,6 +2,7 @@ package com.atomskills.atombackend.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
@@ -10,6 +11,7 @@ import java.time.Instant;
 @Table(name = "edifice_dependency")
 @Getter
 @Setter
+@NoArgsConstructor
 public class EdificeDependency {
 
     @Id

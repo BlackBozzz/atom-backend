@@ -1,15 +1,18 @@
 package com.atomskills.atombackend.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import org.springframework.data.annotation.Id;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "event")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class Event {
 
     @Id
