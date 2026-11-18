@@ -20,7 +20,7 @@ public class EventDto {
     private String edificeName;
     private String resourceType;
     private LocalDateTime occurredAt;
-    private Short idStatus;
+    private Long idStatus;
     private String statusName;
     private Instant syncedAt;
 }
