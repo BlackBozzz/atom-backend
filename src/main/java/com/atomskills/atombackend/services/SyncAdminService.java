@@ -1,8 +1,8 @@
 package com.atomskills.atombackend.services;
 
+import com.argent.servicecommon.queue.service.ArgentQueueService;
 import com.atomskills.atombackend.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +17,8 @@ public class SyncAdminService {
     private final EventRepository events;
     private final EventStatusRepository eventStatuses;
     private final EdificeRepository edifices;
-    private final JdbcTemplate jdbc;
+    private final ExternalCursorRepository cursorRepository;
+    private final ArgentQueueService queueService;
 
     /**
      * Полная очистка всех синхронизированных таблиц и сброс всех курсоров.
@@ -32,8 +33,7 @@ public class SyncAdminService {
         events.deleteAllInBatch();
         eventStatuses.deleteAllInBatch();
         edifices.deleteAllInBatch();
+        cursorRepository.resetAllCursors();
 
-        // Один UPDATE на все источники — сбрасываем все курсоры разом.
-        jdbc.update("UPDATE external_sync_cursor SET last_seen_id = 0, updated_at = now()");
     }
 }
