@@ -1,15 +1,13 @@
 package com.atomskills.atombackend.services.tasks;
 
 import com.argent.servicecommon.queue.service.ArgentQueueHandler;
+import com.atomskills.atombackend.dto.EventBatchTask;
 import com.atomskills.atombackend.dto.EventTask;
-import com.atomskills.atombackend.entity.Edifice;
 import com.atomskills.atombackend.entity.Event;
-import com.atomskills.atombackend.entity.EventStatus;
-import com.atomskills.atombackend.repository.EdificeRepository;
 import com.atomskills.atombackend.repository.EventRepository;
-import com.atomskills.atombackend.repository.EventStatusRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 
@@ -17,23 +15,29 @@ import java.time.Instant;
 @RequiredArgsConstructor
 public class EventTaskHandler {
     private final EventRepository repository;
-    private final EdificeRepository edifices;
-    private final EventStatusRepository statuses;
+    private final EdificeTaskHandler edifices;
+    private final EventStatusTaskHandler statuses;
 
+    @Transactional
+    @ArgentQueueHandler("external-event-batch")
+    public void handleBatch(EventBatchTask batch) {
+        for (var task : batch.getItems()) {
+            handle(task);
+        }
+    }
+
+    @Transactional
     @ArgentQueueHandler("external-event")
-    public void handle(EventTask t) {
-        Edifice edifice = edifices.findById(t.getIdEdifice())
-                .orElseThrow(() -> new IllegalStateException(
-                        "edifice " + t.getIdEdifice() + " ещё не синхронизирован"));
-        EventStatus status = statuses.findById(t.getIdStatus())
-                .orElseThrow(() -> new IllegalStateException(
-                        "event_status " + t.getIdStatus() + " ещё не синхронизирован"));
+    public void handle(EventTask task) {
+        // Родители уже стоят раньше в FIFO, но возможна вставка во внешнюю БД прямо во время опроса.
+        var edifice = edifices.ensurePresent(task.getIdEdifice());
+        var status = statuses.ensurePresent(task.getIdStatus());
 
-        Event event = repository.findById(t.getIdEvent()).orElseGet(Event::new);
-        event.setIdEvent(t.getIdEvent());
+        Event event = repository.findById(task.getIdEvent()).orElseGet(Event::new);
+        event.setIdEvent(task.getIdEvent());
         event.setEdifice(edifice);
-        event.setResourceType(t.getResourceType());
-        event.setOccurredAt(t.getOccurredAt());
+        event.setResourceType(task.getResourceType());
+        event.setOccurredAt(task.getOccurredAt());
         event.setStatus(status);
         event.setSyncedAt(Instant.now());
         repository.save(event);

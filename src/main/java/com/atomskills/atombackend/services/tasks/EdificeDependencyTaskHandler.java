@@ -1,13 +1,13 @@
 package com.atomskills.atombackend.services.tasks;
 
 import com.argent.servicecommon.queue.service.ArgentQueueHandler;
+import com.atomskills.atombackend.dto.EdificeDependencyBatchTask;
 import com.atomskills.atombackend.dto.EdificeDependencyTask;
-import com.atomskills.atombackend.entity.Edifice;
 import com.atomskills.atombackend.entity.EdificeDependency;
 import com.atomskills.atombackend.repository.EdificeDependencyRepository;
-import com.atomskills.atombackend.repository.EdificeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 
@@ -15,23 +15,28 @@ import java.time.Instant;
 @RequiredArgsConstructor
 public class EdificeDependencyTaskHandler {
     private final EdificeDependencyRepository repository;
-    private final EdificeRepository edifices;
+    private final EdificeTaskHandler edifices;
 
+    @Transactional
+    @ArgentQueueHandler("external-edifice-dependency-batch")
+    public void handleBatch(EdificeDependencyBatchTask batch) {
+        for (var task : batch.getItems()) {
+            handle(task);
+        }
+    }
+
+    @Transactional
     @ArgentQueueHandler("external-edifice-dependency")
-    public void handle(EdificeDependencyTask t) {
-        Edifice source = edifices.findById(t.getIdEdificeSource())
-                .orElseThrow(() -> new IllegalStateException(
-                        "edifice source " + t.getIdEdificeSource() + " ещё не синхронизирован"));
-        Edifice dependent = edifices.findById(t.getIdEdificeDependent())
-                .orElseThrow(() -> new IllegalStateException(
-                        "edifice dependent " + t.getIdEdificeDependent() + " ещё не синхронизирован"));
-
-        EdificeDependency d = repository.findById(t.getIdDependence()).orElseGet(EdificeDependency::new);
-        d.setIdDependence(t.getIdDependence());
-        d.setResourceType(t.getResourceType());
-        d.setSource(source);
-        d.setDependent(dependent);
-        d.setSyncedAt(Instant.now());
-        repository.save(d);
+    public void handle(EdificeDependencyTask task) {
+        var source = edifices.ensurePresent(task.getIdEdificeSource());
+        var dependent = edifices.ensurePresent(task.getIdEdificeDependent());
+        EdificeDependency dependency = repository.findById(task.getIdDependence())
+                .orElseGet(EdificeDependency::new);
+        dependency.setIdDependence(task.getIdDependence());
+        dependency.setResourceType(task.getResourceType());
+        dependency.setSource(source);
+        dependency.setDependent(dependent);
+        dependency.setSyncedAt(Instant.now());
+        repository.save(dependency);
     }
 }
