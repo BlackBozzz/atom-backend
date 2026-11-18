@@ -1,6 +1,6 @@
 package com.atomskills.atombackend.reader;
 
-import com.atomskills.atombackend.dto.EventStatusTask;
+import com.atomskills.atombackend.dto.task.EventStatusTask;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;

@@ -1,8 +1,8 @@
 package com.atomskills.atombackend.services.tasks;
 
 import com.argent.servicecommon.queue.service.ArgentQueueHandler;
-import com.atomskills.atombackend.dto.EdificeDependencyBatchTask;
-import com.atomskills.atombackend.dto.EdificeDependencyTask;
+import com.atomskills.atombackend.dto.task.EdificeDependencyBatchTask;
+import com.atomskills.atombackend.dto.task.EdificeDependencyTask;
 import com.atomskills.atombackend.entity.EdificeDependency;
 import com.atomskills.atombackend.repository.EdificeDependencyRepository;
 import lombok.RequiredArgsConstructor;

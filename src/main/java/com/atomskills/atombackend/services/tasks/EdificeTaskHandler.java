@@ -1,8 +1,8 @@
 package com.atomskills.atombackend.services.tasks;
 
 import com.argent.servicecommon.queue.service.ArgentQueueHandler;
-import com.atomskills.atombackend.dto.EdificeBatchTask;
-import com.atomskills.atombackend.dto.EdificeTask;
+import com.atomskills.atombackend.dto.task.EdificeBatchTask;
+import com.atomskills.atombackend.dto.task.EdificeTask;
 import com.atomskills.atombackend.entity.Edifice;
 import com.atomskills.atombackend.reader.EdificeReader;
 import com.atomskills.atombackend.repository.EdificeRepository;

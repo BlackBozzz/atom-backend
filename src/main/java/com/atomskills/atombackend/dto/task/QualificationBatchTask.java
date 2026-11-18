@@ -1,13 +1,14 @@
-package com.atomskills.atombackend.dto;
+package com.atomskills.atombackend.dto.task;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventStatusBatchTask {
-    private List<EventStatusTask> items;
+public class QualificationBatchTask {
+    private List<QualificationTask> items;
 }

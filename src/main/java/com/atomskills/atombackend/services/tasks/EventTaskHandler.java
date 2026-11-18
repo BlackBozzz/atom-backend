@@ -1,8 +1,8 @@
 package com.atomskills.atombackend.services.tasks;
 
 import com.argent.servicecommon.queue.service.ArgentQueueHandler;
-import com.atomskills.atombackend.dto.EventBatchTask;
-import com.atomskills.atombackend.dto.EventTask;
+import com.atomskills.atombackend.dto.task.EventBatchTask;
+import com.atomskills.atombackend.dto.task.EventTask;
 import com.atomskills.atombackend.entity.Event;
 import com.atomskills.atombackend.repository.EventRepository;
 import lombok.RequiredArgsConstructor;

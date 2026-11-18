@@ -1,8 +1,8 @@
 package com.atomskills.atombackend.services.tasks;
 
 import com.argent.servicecommon.queue.service.ArgentQueueHandler;
-import com.atomskills.atombackend.dto.EventStatusBatchTask;
-import com.atomskills.atombackend.dto.EventStatusTask;
+import com.atomskills.atombackend.dto.task.EventStatusBatchTask;
+import com.atomskills.atombackend.dto.task.EventStatusTask;
 import com.atomskills.atombackend.entity.EventStatus;
 import com.atomskills.atombackend.reader.EventStatusReader;
 import com.atomskills.atombackend.repository.EventStatusRepository;

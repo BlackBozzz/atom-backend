@@ -1,4 +1,4 @@
-package com.atomskills.atombackend.dto;
+package com.atomskills.atombackend.dto.task;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,5 +1,9 @@
 package com.atomskills.atombackend.dto;
 
+import com.atomskills.atombackend.dto.task.EdificeDependencyTask;
+import com.atomskills.atombackend.dto.task.EdificeTask;
+import com.atomskills.atombackend.dto.task.EventStatusTask;
+import com.atomskills.atombackend.dto.task.EventTask;
 import com.querydsl.core.types.FactoryExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import org.junit.jupiter.api.Test;

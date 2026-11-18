@@ -1,18 +1,8 @@
 package com.atomskills.atombackend.services.tasks;
 
 import com.argent.servicecommon.queue.service.ArgentQueueService;
-import com.atomskills.atombackend.dto.EdificeDependencyTask;
-import com.atomskills.atombackend.dto.EdificeDependencyBatchTask;
-import com.atomskills.atombackend.dto.EdificeTask;
-import com.atomskills.atombackend.dto.EdificeBatchTask;
-import com.atomskills.atombackend.dto.EventStatusTask;
-import com.atomskills.atombackend.dto.EventStatusBatchTask;
-import com.atomskills.atombackend.dto.EventTask;
-import com.atomskills.atombackend.dto.EventBatchTask;
-import com.atomskills.atombackend.reader.EdificeDependencyReader;
-import com.atomskills.atombackend.reader.EdificeReader;
-import com.atomskills.atombackend.reader.EventReader;
-import com.atomskills.atombackend.reader.EventStatusReader;
+import com.atomskills.atombackend.dto.task.*;
+import com.atomskills.atombackend.reader.*;
 import com.atomskills.atombackend.repository.ExternalCursorRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +37,9 @@ public class ExternalSyncJob {
     private final EventStatusReader statusReader;
     private final EventReader eventReader;
     private final EdificeDependencyReader depReader;
+    private final EmployeeReader employeeReader;
+    private final QualificationReader qualificationReader;
+    private final TimeResolveReader timeResolveReader;
     private final int batchSize;
     private final int maxBatchesPerTable;
 
@@ -58,6 +51,9 @@ public class ExternalSyncJob {
                            EventStatusReader statusReader,
                            EventReader eventReader,
                            EdificeDependencyReader depReader,
+                           EmployeeReader employeeReader,
+                           QualificationReader qualificationReader,
+                           TimeResolveReader timeResolveReader,
                            @Value("${app.external-sync.batch-size:500}") int batchSize,
                            @Value("${app.external-sync.max-batches-per-table:20}") int maxBatchesPerTable) {
         if (batchSize < 1 || maxBatchesPerTable < 1) {
@@ -71,6 +67,9 @@ public class ExternalSyncJob {
         this.statusReader = statusReader;
         this.eventReader = eventReader;
         this.depReader = depReader;
+        this.employeeReader = employeeReader;
+        this.qualificationReader = qualificationReader;
+        this.timeResolveReader = timeResolveReader;
         this.batchSize = batchSize;
         this.maxBatchesPerTable = maxBatchesPerTable;
     }
@@ -106,6 +105,18 @@ public class ExternalSyncJob {
                 syncTable("edifice_dependencies", "external-edifice-dependency-batch",
                         l -> depReader.fetchSince(l, batchSize), EdificeDependencyTask::getIdDependence,
                         EdificeDependencyBatchTask::new);
+
+                if (!syncTable("employees", "external-employee-batch",
+                        l -> employeeReader.fetchSince(l, batchSize), EmployeeTask::getTabel,
+                        EmployeeBatchTask::new)) return;
+
+                if (!syncTable("qualifications", "external-qualification-batch",
+                        l -> qualificationReader.fetchSince(l, batchSize), QualificationTask::getIdQualification,
+                        QualificationBatchTask::new)) return;
+
+                syncTable("time_resolve", "external-time-resolve-batch",
+                        l -> timeResolveReader.fetchSince(l, batchSize), TimeResolveTask::getIdTime,
+                        TimeResolveBatchTask::new);
             });
         } catch (DataAccessException e) {
             log.warn("Синхронизация отложена: недоступна БД ({})", e.getMostSpecificCause().getMessage());
