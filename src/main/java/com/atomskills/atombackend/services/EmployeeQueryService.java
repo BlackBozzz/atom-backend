@@ -28,7 +28,6 @@ public class EmployeeQueryService {
 
     public Page<EmployeeDto> pageWithQualifications(
             Pageable pageable, String lastName, String firstName) {
-
         QEmployee e = QEmployee.employee;
         QQualification q = QQualification.qualification;
 
@@ -80,5 +79,54 @@ public class EmployeeQueryService {
                 dto.setQualifications(byTabel.getOrDefault(dto.getTabel(), List.of())));
 
         return page;
+    }
+
+    /**
+     * Получить список EmployeeDto по списку tabel'ов.
+     */
+    public List<EmployeeDto> findByTabels(List<Long> tabels) {
+        if (tabels == null || tabels.isEmpty()) {
+            return List.of();
+        }
+
+        QEmployee e = QEmployee.employee;
+        QQualification q = QQualification.qualification;
+
+        // 1. Получаем сотрудников
+        List<EmployeeDto> employees = queryFactory
+                .select(selectDto(EmployeeDto.class,
+                        e.tabel,
+                        e.lastName,
+                        e.firstName,
+                        e.middleName,
+                        e.startDateExperience))
+                .from(e)
+                .where(e.tabel.in(tabels))
+                .fetch();
+
+        if (employees.isEmpty()) {
+            return employees;
+        }
+
+        // 2. Получаем квалификации для этих сотрудников
+        List<QualificationItemDto> qualifications = queryFactory
+                .select(selectDto(QualificationItemDto.class,
+                        q.employee.tabel.as("tabel"),
+                        q.idQualification,
+                        q.resourceType,
+                        q.proff))
+                .from(q)
+                .where(q.employee.tabel.in(tabels))
+                .orderBy(q.idQualification.asc())
+                .fetch();
+
+        // 3. Группируем квалификации по tabel
+        Map<Long, List<QualificationItemDto>> byTabel = qualifications.stream()
+                .collect(Collectors.groupingBy(QualificationItemDto::getTabel));
+
+        employees.forEach(dto ->
+                dto.setQualifications(byTabel.getOrDefault(dto.getTabel(), List.of())));
+
+        return employees;
     }
 }
