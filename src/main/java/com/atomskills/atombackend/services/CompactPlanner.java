@@ -14,25 +14,84 @@ import java.util.stream.Collectors;
 public class CompactPlanner {
 
     private static final int MIN_SIZE = 2, MAX_SIZE = 5, WATER = 0, ENERGY = 1;
-    private static final double DEFAULT_CONFLICT = 0.9;
     private static final long TIME_BUDGET_MS = 15_000L;
     private static final double INF = Double.MAX_VALUE / 8, EPS = 1e-9;
+    private static final double DEFAULT_CONFLICT_IF_EMPTY = 0.0; // Дефолт 0.0 для чистых тестов
 
     private final ObjectMapper mapper = new ObjectMapper();
 
     public String solve(InputContextDto db) {
         ProblemModel m = transform(db);
+
+        // Применяем ручную матрицу или дефолтную
+        applyConflictMatrix(m, db.getConflictMatrix());
+
         Solver solver = new Solver(m);
         Solution s = solver.search(TIME_BUDGET_MS);
-        double mk = solver.verify(s);            // независимая проверка ВСЕХ правил
+
+        // Независимая проверка ВСЕХ правил + точный расчет времени
+        double mk = solver.verify(s);
         s.setMakespan(mk);
+
         log.info("План: бригад={}, починок={}, makespan={} сек ({} ч)",
                 s.getMembers().size(), m.getRepairs().size(), Math.round(mk),
                 String.format(Locale.US, "%.2f", mk / 3600.0));
+
         return write(m, s);
     }
 
-    // ==================== МОДЕЛИ ====================
+    /**
+     * Заполняет матрицу конфликтов.
+     * Если conflictConfig null/empty -> заполняет DEFAULT_CONFLICT_IF_EMPTY.
+     * Если есть данные -> парсит и заполняет точечно.
+     */
+    private void applyConflictMatrix(ProblemModel m, List<Object> conflictConfig) {
+        int n = m.getWorkers().size();
+        double[][] c = new double[n][n];
+
+        // 1. Инициализация базовым значением
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(c[i], DEFAULT_CONFLICT_IF_EMPTY);
+            c[i][i] = 0.0;
+        }
+
+        // 2. Наложение ручных значений из конфига
+        if (conflictConfig != null && !conflictConfig.isEmpty()) {
+            for (Object obj : conflictConfig) {
+                if (obj instanceof Map<?, ?> map) {
+                    Long a = getLong(map, "tabelA");
+                    Long b = getLong(map, "tabelB");
+                    Double val = getDouble(map, "conflict");
+
+                    if (a != null && b != null && val != null) {
+                        Integer idxA = m.getWorkerIndexMap().get(a);
+                        Integer idxB = m.getWorkerIndexMap().get(b);
+                        if (idxA != null && idxB != null) {
+                            c[idxA][idxB] = val;
+                            c[idxB][idxA] = val;
+                        }
+                    }
+                }
+            }
+            log.info("Применена ручная матрица конфликтов. Записей: {}", conflictConfig.size());
+        } else {
+            log.info("Ручная матрица не передана. Используется значение по умолчанию: {}", DEFAULT_CONFLICT_IF_EMPTY);
+        }
+
+        m.setConflict(c);
+    }
+
+    private Long getLong(Map<?, ?> m, String key) {
+        Object v = m.get(key);
+        return v instanceof Number ? ((Number) v).longValue() : null;
+    }
+
+    private Double getDouble(Map<?, ?> m, String key) {
+        Object v = m.get(key);
+        return v instanceof Number ? ((Number) v).doubleValue() : null;
+    }
+
+    // ==================== МОДЕЛИ ДАННЫХ ====================
 
     @Data public static class Worker {
         private Long tabel;
@@ -51,6 +110,7 @@ public class CompactPlanner {
         private List<Worker> workers = new ArrayList<>();
         private List<Repair> repairs = new ArrayList<>();
         private double[][] conflict;
+        private Map<Long, Integer> workerIndexMap; // Для маппинга табельных номеров
     }
 
     @Data public static class Solution {
@@ -60,7 +120,9 @@ public class CompactPlanner {
     }
 
     private static final class Eval {
-        double mk; List<List<Integer>> orders; int[] assign;
+        double mk;
+        List<List<Integer>> orders;
+        int[] assign;
     }
 
     private static <T> List<T> nz(List<T> l) { return l == null ? Collections.emptyList() : l; }
@@ -77,6 +139,8 @@ public class CompactPlanner {
     private ProblemModel transform(InputContextDto db) {
         ProblemModel m = new ProblemModel();
         Map<Long, Integer> wi = new LinkedHashMap<>();
+        m.setWorkerIndexMap(wi);
+
         for (WorkerDto w : nz(db.getWorkers())) {
             if (w.getTabel() == null || wi.containsKey(w.getTabel())) continue;
             Worker x = new Worker();
@@ -150,21 +214,6 @@ public class CompactPlanner {
             }
         }
 
-        // конфликты: 0.9 всем парам, точечные переопределения из конфига
-        int n = m.getWorkers().size();
-        double[][] c = new double[n][n];
-        for (int i = 0; i < n; i++) { Arrays.fill(c[i], DEFAULT_CONFLICT); c[i][i] = 0.0; }
-        for (Object o : nz(db.getConflictMatrix())) {
-            if (!(o instanceof Map)) continue;
-            Map<?, ?> mm = (Map<?, ?>) o;
-            Object a = mm.get("tabelA"), b = mm.get("tabelB"), v = mm.get("conflict");
-            if (!(a instanceof Number) || !(b instanceof Number) || !(v instanceof Number)) continue;
-            Integer i = wi.get(((Number) a).longValue()), j = wi.get(((Number) b).longValue());
-            if (i == null || j == null) continue;
-            double val = Math.max(0.0, ((Number) v).doubleValue());
-            c[i][j] = val; c[j][i] = val;
-        }
-        m.setConflict(c);
         return m;
     }
 
@@ -186,7 +235,7 @@ public class CompactPlanner {
         return acc;
     }
 
-    // ==================== ЯДРО ====================
+    // ==================== ЯДРО ОПТИМИЗАЦИИ ====================
 
     private final class Solver {
         final ProblemModel m;
@@ -296,9 +345,6 @@ public class CompactPlanner {
 
         /**
          * Единственный планировщик: назначение + порядок + времена согласованно.
-         * Берём только ГОТОВУЮ работу (все предшественники завершены),
-         * start = max(освобождение бригады, max окончание предшественников).
-         * Внутри бригады free[b] монотонно растёт => строгая последовательность.
          */
         Eval schedule(double[][] dur, int B, int[] forced, boolean coverageFirst) {
             double[] free = new double[B], end = new double[R];
