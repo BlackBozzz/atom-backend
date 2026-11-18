@@ -19,7 +19,7 @@ public class EdificeDependency {
 
     @Id
     @Column(name = "id_dependence", nullable = false)
-    private Integer idDependence;
+    private Long idDependence;
 
     @Column(name = "resource_type", nullable = false, length = 15)
     private String resourceType;

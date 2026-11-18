@@ -10,9 +10,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventTask {
-    private int idEvent;
-    private int idEdifice;
+    private Long idEvent;
+    private Long idEdifice;
     private String resourceType;
     private LocalDateTime occurredAt;
-    private short idStatus;
+    private Long idStatus;
 }

@@ -20,7 +20,7 @@ public class Event {
 
     @Id
     @Column(name = "id_event", nullable = false)
-    private Integer idEvent;
+    private Long idEvent;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_edifice", nullable = false)

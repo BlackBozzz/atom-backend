@@ -25,7 +25,7 @@ public class QualificationReader {
 
     public List<QualificationTask> fetchSince(long lastSeenId, int limit) {
         return legacyJdbc.query(SQL, (rs, n) -> new QualificationTask(
-                rs.getInt("id_qualification"),
+                rs.getLong("id_qualification"),
                 rs.getLong("id_employee"),
                 rs.getString("resource_type"),
                 rs.getBigDecimal("proff")), lastSeenId, limit);

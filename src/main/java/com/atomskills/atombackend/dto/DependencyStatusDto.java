@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DependencyStatusDto {
-    private Integer idDependence;
+    private Long idDependence;
     private String resourceType;
-    private Integer sourceId;
-    private Integer dependentId;
+    private Long sourceId;
+    private Long dependentId;
     private StatusDto status;
 }

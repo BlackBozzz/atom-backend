@@ -20,8 +20,8 @@ public class EdificeDependencyController {
 
     @GetMapping
     public Page<EdificeDependencyDto> list(
-            @RequestParam(required = false) Integer idSource,
-            @RequestParam(required = false) Integer idDependent,
+            @RequestParam(required = false) Long idSource,
+            @RequestParam(required = false) Long idDependent,
             @PageableDefault(size = 20, sort = "idDependence") Pageable pageable) {
         return service.page(pageable, idSource, idDependent);
     }

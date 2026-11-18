@@ -14,7 +14,7 @@ import java.time.Instant;
 public class Qualification {
     @Id
     @Column(name = "id_qualification")
-    private Integer idQualification;
+    private Long idQualification;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_employee")
     private Employee employee;

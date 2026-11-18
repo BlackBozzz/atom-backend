@@ -23,7 +23,7 @@ public class EdificeDependencyQueryService {
         this.queryFactory = queryFactory;
     }
 
-    public Page<EdificeDependencyDto> page(Pageable pageable, Integer idSource, Integer idDependent) {
+    public Page<EdificeDependencyDto> page(Pageable pageable, Long idSource, Long idDependent) {
         QEdificeDependency d  = QEdificeDependency.edificeDependency;
         QEdifice            es = QEdifice.edifice;   // source
         QEdifice            ed = new QEdifice("edifice_dependent"); // alias для второго JOIN

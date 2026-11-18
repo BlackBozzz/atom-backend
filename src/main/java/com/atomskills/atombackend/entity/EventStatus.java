@@ -22,7 +22,7 @@ public class EventStatus {
 
     @Id
     @Column(name = "id_status", nullable = false)
-    private Short idStatus;
+    private Long idStatus;
 
     @Column(nullable = false, length = 20, unique = true)
     private String name;

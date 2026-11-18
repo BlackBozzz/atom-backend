@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QualificationTask {
-    private Integer idQualification;
+    private Long idQualification;
     private Long idEmployee;
     private String resourceType;
     private BigDecimal proff;

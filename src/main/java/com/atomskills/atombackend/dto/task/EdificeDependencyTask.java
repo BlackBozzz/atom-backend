@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EdificeDependencyTask {
-    private int idDependence;
+    private Long idDependence;
     private String resourceType;
-    private int idEdificeSource;
-    private int idEdificeDependent;
+    private Long idEdificeSource;
+    private Long idEdificeDependent;
 }

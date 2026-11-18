@@ -36,7 +36,7 @@ public class EventStatusTaskHandler {
         repository.save(entity);
     }
 
-    public EventStatus ensurePresent(short id) {
+    public EventStatus ensurePresent(Long id) {
         return repository.findById(id).orElseGet(() -> {
             EventStatusTask task = reader.findById(id).orElseThrow(() -> new IllegalStateException(
                     "Во внешней БД отсутствует event_status " + id + ", на него ссылается событие"));

@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EventStatusTask {
-    private short idStatus;
+    private Long idStatus;
     private String name;
 }

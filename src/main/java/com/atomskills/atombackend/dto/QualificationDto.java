@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 @Data
 public class QualificationDto {
-    private Integer tabel;
+    private Long tabel;
     private String resourceType;
     private BigDecimal proff;
 }

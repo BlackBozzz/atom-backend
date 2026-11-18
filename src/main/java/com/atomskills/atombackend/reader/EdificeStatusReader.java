@@ -79,7 +79,7 @@ public class EdificeStatusReader {
                 }
             }
             return new EdificeStateDto(
-                    rs.getInt("id_edifice"),
+                    rs.getLong("id_edifice"),
                     rs.getString("name"),
                     types,
                     rs.getString("district"),
@@ -116,10 +116,10 @@ public class EdificeStatusReader {
     public List<DependencyStatusDto> findDependencies() {
         return jdbcTemplate.query(SQL_DEPENDENCIES, (rs, rowNum) ->
                 new DependencyStatusDto(
-                        rs.getInt("id_dependence"),
+                        rs.getLong("id_dependence"),
                         rs.getString("resource_type"),
-                        rs.getInt("id_edifice_source"),
-                        rs.getInt("id_edifice_dependent"),
+                        rs.getLong("id_edifice_source"),
+                        rs.getLong("id_edifice_dependent"),
                         null));
     }
 }

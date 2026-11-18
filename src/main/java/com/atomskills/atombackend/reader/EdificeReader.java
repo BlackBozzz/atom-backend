@@ -19,7 +19,7 @@ public class EdificeReader {
             Array array = rs.getArray("resource_type");
             String[] types = array == null ? new String[0] : (String[]) array.getArray();
             return new EdificeTask(
-                    rs.getInt("id_edifice"), rs.getString("name"), types,
+                    rs.getLong("id_edifice"), rs.getString("name"), types,
                     rs.getString("district"), rs.getString("street"), rs.getString("house_number"));
         } catch (SQLException e) {
             throw new IllegalStateException("Не удалось прочитать resource_type", e);
@@ -36,7 +36,7 @@ public class EdificeReader {
                 "WHERE id_edifice > ? ORDER BY id_edifice LIMIT ?", MAPPER, lastSeenId, limit);
     }
 
-    public Optional<EdificeTask> findById(int id) {
+    public Optional<EdificeTask> findById(Long id) {
         List<EdificeTask> rows = legacyJdbc.query(
                 "SELECT " + COLUMNS + " FROM edifices WHERE id_edifice = ?", MAPPER, id);
         return rows.stream().findFirst();

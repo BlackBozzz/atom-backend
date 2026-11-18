@@ -23,7 +23,7 @@ public class Edifice {
 
     @Id
     @Column(name = "id_edifice", nullable = false)
-    private Integer idEdifice;
+    private Long idEdifice;
 
     @Column(nullable = false, length = 120)
     private String name;

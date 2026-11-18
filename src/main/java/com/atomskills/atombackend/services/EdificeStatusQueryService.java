@@ -39,7 +39,7 @@ public class EdificeStatusQueryService {
         Map<Integer, Map<String, StatusDto>> statuses = reader.findResourceStatuses(at);
         List<DependencyStatusDto> dependencies = reader.findDependencies();
 
-        Map<Integer, EdificeStateDto> byId = new HashMap<>();
+        Map<Long, EdificeStateDto> byId = new HashMap<>();
         for (EdificeStateDto edifice : edifices) {
             byId.put(edifice.getIdEdifice(), edifice);
             Map<String, StatusDto> resourceStatuses =

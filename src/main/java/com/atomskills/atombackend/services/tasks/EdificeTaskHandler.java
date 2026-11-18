@@ -41,7 +41,7 @@ public class EdificeTaskHandler {
     }
 
     /** Подтягивает поздно появившегося родителя непосредственно перед ребёнком. */
-    public Edifice ensurePresent(int id) {
+    public Edifice ensurePresent(Long id) {
         return repository.findById(id).orElseGet(() -> {
             EdificeTask task = reader.findById(id).orElseThrow(() -> new IllegalStateException(
                     "Во внешней БД отсутствует edifice " + id + ", на него ссылается зависимая строка"));

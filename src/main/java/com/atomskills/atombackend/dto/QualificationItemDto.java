@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 @Data
 public class QualificationItemDto {
     private Long tabel;                 // для группировки
-    private Integer idQualification;
+    private Long idQualification;
     private String resourceType;
     private BigDecimal proff;
 }

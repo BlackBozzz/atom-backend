@@ -21,16 +21,16 @@ public class EventStatusReader {
                 SELECT id_status, name FROM event_statuses
                 WHERE id_status > ? ORDER BY id_status LIMIT ?
                 """, (rs, row) -> new EventStatusTask(
-                        rs.getShort("id_status"), rs.getString("name")
+                        rs.getLong("id_status"), rs.getString("name")
                 ),
                 lastSeenId, limit);
     }
 
-    public Optional<EventStatusTask> findById(short id) {
+    public Optional<EventStatusTask> findById(Long id) {
         List<EventStatusTask> rows = legacyJdbc.query("""
                 SELECT id_status, name FROM event_statuses WHERE id_status = ?
                 """, (rs, row) -> new EventStatusTask(
-                        rs.getShort("id_status"), rs.getString("name")
+                        rs.getLong("id_status"), rs.getString("name")
         ), id);
         return rows.stream().findFirst();
     }

@@ -10,8 +10,8 @@ import java.time.Duration;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TimeResolveTask {
-    private Integer idTime;
+    private Long idTime;
     private String resourceType;
     private String avgResolutionTime;
-    private Integer idEdifice;
+    private Long idEdifice;
 }

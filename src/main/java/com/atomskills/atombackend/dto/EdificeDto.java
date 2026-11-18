@@ -10,7 +10,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EdificeDto {
-    private Integer idEdifice;
+    private Long idEdifice;
     private String name;
     private String[] resourceType;
     private String district;

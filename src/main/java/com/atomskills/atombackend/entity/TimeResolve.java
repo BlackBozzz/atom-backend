@@ -3,10 +3,7 @@ package com.atomskills.atombackend.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
-import java.time.Duration;
 import java.time.Instant;
 
 @Entity
@@ -16,7 +13,7 @@ import java.time.Instant;
 public class TimeResolve {
     @Id
     @Column(name = "id_time")
-    private Integer idTime;
+    private Long idTime;
     @Column(name = "resource_type")
     private String resourceType;
     @Column(name = "avg_resolution_time", length = 40)

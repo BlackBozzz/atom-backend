@@ -28,8 +28,8 @@ public class AtomEventQueryService {
     }
 
     public Page<EventDto> page(Pageable pageable,
-                               Integer idEdifice,
-                               Short idStatus,
+                               Long idEdifice,
+                               Long idStatus,
                                LocalDateTime from,
                                LocalDateTime to) {
         QEvent e  = QEvent.event;
@@ -63,7 +63,7 @@ public class AtomEventQueryService {
         ));
     }
 
-    public Optional<LastEventDto> findLatestByEdifice(Integer idEdifice) {
+    public Optional<LastEventDto> findLatestByEdifice(Long idEdifice) {
         QEvent e  = QEvent.event;
         QEdifice ed = QEdifice.edifice;
         QEventStatus s = QEventStatus.eventStatus;

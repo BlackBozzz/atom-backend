@@ -2,12 +2,14 @@ package com.atomskills.atombackend.reader;
 
 import com.atomskills.atombackend.dto.*;
 import com.atomskills.atombackend.entity.*;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -106,16 +108,66 @@ public class PlanningDataReader {
     }
 
     private List<BaseDurationDto> fetchBaseDurations() {
-        return queryFactory
-                .select(Projections.fields(BaseDurationDto.class,
+        List<Tuple> tuples = queryFactory
+                .select(
                         qTimeResolve.resourceType,
                         qTimeResolve.edifice.idEdifice,
-                        // Преобразование Interval в секунды зависит от диалекта БД.
-                        // Для PostgreSQL часто используют extract(epoch from ...)
-                        // Здесь псевдо-код, так как JPA/QueryDSL плохо дружат с Interval напрямую в проекциях
-                        qTimeResolve.avgResolutionTime.stringValue().as("avgResolutionSeconds")
-                ))
+                        qTimeResolve.avgResolutionTime
+                )
                 .from(qTimeResolve)
                 .fetch();
+
+        return tuples.stream().map(tuple -> {
+            BaseDurationDto dto = new BaseDurationDto();
+            dto.setResourceType(tuple.get(qTimeResolve.resourceType));
+
+            // ID объекта может прийти как Integer/Short из БД, приводим к Long
+            Number edificeId = tuple.get(qTimeResolve.edifice.idEdifice);
+            if (edificeId != null) {
+                dto.setIdEdifice(edificeId.longValue());
+            }
+
+            // Парсим строку интервала в секунды
+            String intervalStr = tuple.get(qTimeResolve.avgResolutionTime);
+            dto.setAvgResolutionSeconds(parseIntervalToSeconds(intervalStr));
+
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+    /**
+     * Парсит строку интервала (например, "00:01:30" или "PT1H30M") в секунды.
+     */
+    private Long parseIntervalToSeconds(String intervalStr) {
+        if (intervalStr == null || intervalStr.isEmpty()) return 0L;
+
+        try {
+            // Вариант 1: Формат HH:MM:SS (часто встречается в PostgreSQL при приведении к строке)
+            if (intervalStr.contains(":")) {
+                String[] parts = intervalStr.split(":");
+                if (parts.length == 3) {
+                    long hours = Long.parseLong(parts[0]);
+                    long minutes = Long.parseLong(parts[1]);
+                    // В секундах могут быть доли, берем целую часть
+                    long seconds = Long.parseLong(parts[2].split("\\.")[0]);
+                    return (hours * 3600) + (minutes * 60) + seconds;
+                }
+            }
+
+            // Вариант 2: Если это ISO-8601 формат (PT...S) или просто число
+            // Можно использовать java.time.Duration для надежности
+            try {
+                java.time.Duration duration = java.time.Duration.parse("PT" + intervalStr.toUpperCase().replace(" ", ""));
+                // Если парсинг не удался из-за формата, пробуем просто как число
+                return duration.getSeconds();
+            } catch (Exception e) {
+                // Если не ISO формат, пробуем как простое число
+                return (long) Double.parseDouble(intervalStr.replaceAll("[^0-9.]", ""));
+            }
+
+        } catch (Exception e) {
+            System.err.println("Не удалось распарсить интервал: " + intervalStr + ". Возвращаю дефолт 3600.");
+            return 3600L;
+        }
     }
 }

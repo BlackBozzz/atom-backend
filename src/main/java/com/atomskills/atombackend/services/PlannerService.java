@@ -3,8 +3,10 @@ package com.atomskills.atombackend.services;
 import com.atomskills.atombackend.dto.InputContextDto;
 import com.atomskills.atombackend.reader.PlanningDataReader;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PlannerService {
@@ -12,17 +14,17 @@ public class PlannerService {
     private final CompactPlanner compactPlanner;
 
     /**
-     * Основной метод планирования.
-     * 1. Забирает данные из БД через ридер.
-     * 2. Выполняет оптимизацию в компактном планировщике.
-     * 3. Возвращает JSON-строку в требуемом формате.
+     * Забирает данные из БД и сразу отдает их в оптимизатор.
+     * Оптимизатор сам сгенерирует бригады и расписание.
      */
     public String calculatePlan() {
-        // Шаг 1: Получение исходных данных из БД
+        log.info("Начало загрузки данных из БД...");
         InputContextDto rawData = planningDataReader.readInputData();
 
-        // Шаг 2: Расчет и выдача результата
-        // Конфликты пока не передаем, так как их нет в БД (или они придут отдельно)
-        return compactPlanner.solve(rawData);
+        log.info("Данные загружены. Запуск оптимизации...");
+        String resultJson = compactPlanner.solve(rawData);
+
+        log.info("Оптимизация завершена успешно.");
+        return resultJson;
     }
 }

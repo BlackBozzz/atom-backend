@@ -25,8 +25,8 @@ public class EventController {
 
     @GetMapping
     public Page<EventDto> list(
-            @RequestParam(required = false) Integer idEdifice,
-            @RequestParam(required = false) Short idStatus,
+            @RequestParam(required = false) Long idEdifice,
+            @RequestParam(required = false) Long idStatus,
             @RequestParam(required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
             @RequestParam(required = false)
@@ -41,7 +41,7 @@ public class EventController {
      * 404 — если у объекта нет событий.
      */
     @GetMapping("/latest")
-    public ResponseEntity<LastEventDto> latest(@RequestParam Integer idEdifice) {
+    public ResponseEntity<LastEventDto> latest(@RequestParam Long idEdifice) {
         return service.findLatestByEdifice(idEdifice)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());

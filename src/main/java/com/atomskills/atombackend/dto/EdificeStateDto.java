@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EdificeStateDto {
-    private Integer idEdifice;
+    private Long idEdifice;
     private String name;
     private List<String> resourceTypes;
     private String district;

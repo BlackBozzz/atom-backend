@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EdificeTask {
-    private int idEdifice;
+    private Long idEdifice;
     private String name;
     private String[] resourceType;
     private String district;

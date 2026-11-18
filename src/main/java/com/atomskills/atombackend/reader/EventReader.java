@@ -26,10 +26,10 @@ public class EventReader {
 
     public List<EventTask> fetchSince(long lastSeenId, int limit) {
         return legacyJdbc.query(SQL, (rs, n) -> new EventTask(
-                rs.getInt("id_event"),
-                rs.getInt("id_edifice"),
+                rs.getLong("id_event"),
+                rs.getLong("id_edifice"),
                 rs.getString("resource_type"),
                 rs.getTimestamp("occurred_at").toLocalDateTime(),
-                rs.getShort("id_status")), lastSeenId, limit);
+                rs.getLong("id_status")), lastSeenId, limit);
     }
 }

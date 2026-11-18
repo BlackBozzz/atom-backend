@@ -26,9 +26,9 @@ public class EdificeDependencyReader {
 
     public List<EdificeDependencyTask> fetchSince(long lastSeenId, int limit) {
         return legacyJdbc.query(SQL, (rs, n) -> new EdificeDependencyTask(
-                rs.getInt("id_dependence"),
+                rs.getLong("id_dependence"),
                 rs.getString("resource_type"),
-                rs.getInt("id_edifice_source"),
-                rs.getInt("id_edifice_dependent")), lastSeenId, limit);
+                rs.getLong("id_edifice_source"),
+                rs.getLong("id_edifice_dependent")), lastSeenId, limit);
     }
 }

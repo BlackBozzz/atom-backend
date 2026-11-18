@@ -10,7 +10,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EdificeDependencyDto {
-    private Integer idDependence;
+    private Long idDependence;
     private String resourceType;
     private EdificeDto source;
     private EdificeDto dependent;

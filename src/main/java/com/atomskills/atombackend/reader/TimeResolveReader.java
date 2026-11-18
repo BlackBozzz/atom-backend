@@ -31,10 +31,10 @@ public class TimeResolveReader {
 
     public List<TimeResolveTask> fetchSince(long lastSeenId, int limit) {
         return legacyJdbc.query(SQL, (rs, n) -> new TimeResolveTask(
-                rs.getInt("id_time"),
+                rs.getLong("id_time"),
                 rs.getString("resource_type"),
                 rs.getString("avg_resolution_time_iso"),
-                rs.getInt("id_edifice")
+                rs.getLong("id_edifice")
         ), lastSeenId, limit);
     }
 }

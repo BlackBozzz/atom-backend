@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventDto {
-    private Integer idEvent;
-    private Integer idEdifice;
+    private Long idEvent;
+    private Long idEdifice;
     private String edificeName;
     private String resourceType;
     private LocalDateTime occurredAt;
